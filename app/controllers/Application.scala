@@ -1,18 +1,24 @@
 package controllers
 
+import javax.inject.Inject
+
+import dto.ArrangementDto
 import model.Arrangement
-import play.api.http.{ContentTypeOf, ContentTypes, Writeable}
-import play.api.libs.json.{JsValue, Json, OWrites}
 import play.api.mvc._
 
-class Application extends Controller {
+import scala.concurrent.Future
+
+class Application @Inject() (val arrangementDto: ArrangementDto)  extends Controller {
+
+  import model.Arrangements._
+  import scala.concurrent.ExecutionContext.Implicits.global
 
   def ping = Action {
     Ok("pong")
   }
 
-  def getArrangement(id: String) = Action { implicit request =>
-
-    Ok(new Arrangement(1, id))
+  def getArrangement(id: String) = Action async { implicit request =>
+    val arrangement: Future[Option[Arrangement]] = arrangementDto.getById(id.toInt)
+    arrangement.map(x => Ok(x.get))
   }
 }

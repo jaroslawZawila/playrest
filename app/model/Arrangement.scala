@@ -5,9 +5,9 @@ import play.api.mvc.Codec
 
 sealed trait JsonResponse
 
-case class Arrangement(paymentDay: Int, status: String) extends JsonResponse
+case class Arrangement(id: Int, paymentDay: Int, status: String) extends JsonResponse
 
-object Arrangement {
+object Arrangements {
 
   import play.api.libs.json._
 
@@ -20,4 +20,6 @@ object Arrangement {
   implicit def contentTypeOf_ArgonautJson(implicit codec: Codec): ContentTypeOf[Arrangement] = {
     ContentTypeOf[Arrangement](Some(ContentTypes.JSON))
   }
+
+
 }
