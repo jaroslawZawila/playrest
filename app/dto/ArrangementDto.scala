@@ -17,9 +17,10 @@ class ArrangementDto @Inject() (protected val dbConfigProvider: DatabaseConfigPr
 
   def all(): Future[Seq[Arrangement]] = db.run(arrangements.result)
 
-  def getById(id: Int)(implicit executionContext: ExecutionContext): Future[Option[Arrangement]] = db.run(arrangements.filter( _.id === id ).result).map(_.headOption)
+  def getById(id: Int)(implicit executionContext: ExecutionContext): Future[Option[Arrangement]] =
+    db.run(arrangements.filter( _.id === id ).result).map(_.headOption)
 
-  private class ArrangementTable(tag: Tag) extends Table[Arrangement](tag, Some("PUBLIC"), "ARRANGEMENT") {
+  private class ArrangementTable(tag: Tag) extends Table[Arrangement](tag, "arrangements") {
 
     def id = column[Int]("id", O.PrimaryKey)
     def paymentDay = column[Int]("paymentday")

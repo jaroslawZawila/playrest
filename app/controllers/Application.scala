@@ -19,6 +19,9 @@ class Application @Inject() (val arrangementDto: ArrangementDto)  extends Contro
 
   def getArrangement(id: String) = Action async { implicit request =>
     val arrangement: Future[Option[Arrangement]] = arrangementDto.getById(id.toInt)
-    arrangement.map(x => Ok(x.get))
+    arrangement.map {
+      case Some(x) => Ok(x)
+      case None => NotFound("")
+    }
   }
 }

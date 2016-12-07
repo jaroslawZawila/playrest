@@ -2,14 +2,33 @@ import org.specs2.mutable._
 import org.specs2.runner._
 import org.junit.runner._
 import org.specs2.matcher.Matchers
-import play.api.libs.ws.WSResponse
 import play.api.test._
+import play.api.db.{Databases, Database}
 
 import scala.concurrent.{Await, Future}
 import scala.concurrent.duration._
 
 @RunWith(classOf[JUnitRunner])
-class IntegrationSpec extends Specification with Matchers {
+class IntegrationSpec extends Specification with Matchers with BeforeAfter {
+
+
+  def before = {
+
+  }
+
+  override def after: Any = {}
+
+  def withMyDatabase[T](block: Database => T) = {
+    Databases.withInMemory(
+      name = "postgres",
+      urlOptions = Map(
+        "MODE" -> "POSTGRES"
+      ),
+      config = Map(
+        "logStatements" -> true
+      )
+    )(block)
+  }
 
   import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -24,10 +43,12 @@ class IntegrationSpec extends Specification with Matchers {
     }
 
     "get arrangement resource response is correct" in new WithServer() {
-      val responseFuture = WsTestClient.wsCall(controllers.routes.Application.getArrangement("1")).get()
-      val response = Await.result(responseFuture, 1.second)
+      val responseFuture = WsTestClient.wsCall(controllers.routes.Application.getArrangement("2")).get()
+      val response = Await.result(responseFuture, 5.second)
 
-      response.body shouldEqual("{\"paymentDay\":1,\"status\":\"2\"}")
+      response.status shouldEqual(400)
     }
   }
+
+
 }
