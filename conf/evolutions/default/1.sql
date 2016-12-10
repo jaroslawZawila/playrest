@@ -10,8 +10,6 @@ CREATE TABLE arrangements
 );
 CREATE UNIQUE INDEX arrangements_id_uindex ON arrangements (id);
 
-INSERT INTO arrangements (id, paymentday, status) VALUES (1, 15, 'ACTIVE')
-
 # --- !Downs
 
 DROP TABLE arrangements;

@@ -4,7 +4,7 @@ import org.junit.runner._
 import org.scalatest.BeforeAndAfterAll
 import org.scalatestplus.play._
 import play.api.db.DBApi
-import play.api.db.evolutions.Evolutions
+import play.api.db.evolutions.{Evolution, Evolutions, SimpleEvolutionsReader}
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.Result
 import play.api.test.Helpers.{GET, _}
@@ -69,7 +69,13 @@ class ApplicationTest extends PlaySpec with OneAppPerSuite with BeforeAndAfterAl
   }
 
   override def beforeAll(): Unit = {
-  Evolutions.applyEvolutions(app.injector.instanceOf[DBApi].database("default"))
+  Evolutions.applyEvolutions(app.injector.instanceOf[DBApi].database("default"), SimpleEvolutionsReader.forDefault(
+    Evolution(
+      999,
+      "INSERT INTO arrangements (id, paymentday, status) VALUES (1, 15, 'ACTIVE');",
+      "DELETE FROM arrangements WHERE id=1;"
+    )
+  ))
 }
 
 }
