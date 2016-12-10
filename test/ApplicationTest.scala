@@ -1,8 +1,8 @@
 import akka.stream.Materializer
+import model.Arrangement
 import org.junit.runner._
 import org.scalatest.BeforeAndAfterAll
 import org.scalatestplus.play._
-import org.specs2.specification.core.SpecStructure
 import play.api.db.DBApi
 import play.api.db.evolutions.Evolutions
 import play.api.inject.guice.GuiceApplicationBuilder
@@ -12,12 +12,11 @@ import play.api.test._
 import play.api.{Application, Configuration, Mode}
 
 import scala.concurrent.Future
-//import org.specs2.runner.JUnitRunner
 import org.scalatest.junit.JUnitRunner
+import model.Arrangements._
 
 @RunWith(classOf[JUnitRunner])
 class ApplicationTest extends PlaySpec with OneAppPerSuite with BeforeAndAfterAll {
-
 
     implicit override lazy val app: Application = new GuiceApplicationBuilder().configure(
     Configuration.from(
@@ -52,7 +51,11 @@ class ApplicationTest extends PlaySpec with OneAppPerSuite with BeforeAndAfterAl
       val result: Future[Result] = route(app, request).get
 
       status(result) mustEqual OK
-      contentAsJson(result)
+
+      val arrangement = contentAsJson(result).as[Arrangement]
+      arrangement.id mustEqual 1
+      arrangement.paymentDay mustEqual 15
+      arrangement.status mustEqual "ACTIVE"
     }
 
     "arrangement returns not found if arrangement does not exist" in {

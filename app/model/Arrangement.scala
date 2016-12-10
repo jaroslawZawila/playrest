@@ -21,5 +21,6 @@ object Arrangements {
     ContentTypeOf[Arrangement](Some(ContentTypes.JSON))
   }
 
+  implicit val readForArrangement: Reads[Arrangement] = Json.reads[Arrangement]
 
 }
