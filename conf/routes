@@ -6,6 +6,7 @@
 GET     /ping                       controllers.Application.ping
 
 GET     /arrangement/:id            controllers.Application.getArrangement(id: String)
+POST    /arrangement/              controllers.Application.saveArrangement()
 
 # Map static resources from the /public folder to the /assets URL path
 #GET     /assets/*file               controllers.Assets.at(path="/public", file)
