@@ -1,18 +1,13 @@
 package model
 
 import play.api.http.{ContentTypeOf, ContentTypes, Writeable}
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OWrites, Reads}
 import play.api.mvc.Codec
 
 sealed trait JsonResponse
 
 case class Arrangement(id: Int, paymentDay: Int, status: String) extends JsonResponse
-case class ArrangementRequest(paymentDay: Int, status: String) extends JsonResponse
-
-
-object Arrangements {
-
-  import play.api.libs.json._
+object Arrangement {
 
   implicit val arrangementWrites: OWrites[Arrangement] = Json.writes[Arrangement]
 
@@ -25,7 +20,19 @@ object Arrangements {
   }
 
   implicit val readForArrangement: Reads[Arrangement] = Json.reads[Arrangement]
+
+}
+
+case class ArrangementRequest(paymentDay: Int, status: String) extends JsonResponse
+
+object ArrangementRequest {
   implicit val readForArrangementRequest: Reads[ArrangementRequest] = Json.reads[ArrangementRequest]
+  implicit val arrangementRequestWrites: OWrites[ArrangementRequest] = Json.writes[ArrangementRequest]
+}
+
+case class CreateResponse(id: String)
+
+object CreateResponse {
 
   implicit val createResponseWrites: OWrites[CreateResponse] = Json.writes[CreateResponse]
 
@@ -36,7 +43,4 @@ object Arrangements {
   implicit def contentTypeOf_CreateResponse(implicit codec: Codec): ContentTypeOf[CreateResponse] = {
     ContentTypeOf[CreateResponse](Some(ContentTypes.JSON))
   }
-
 }
-
-case class CreateResponse(id: String)

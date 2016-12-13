@@ -4,7 +4,7 @@
 
 CREATE TABLE arrangements
 (
-    id INTEGER PRIMARY KEY NOT NULL,
+    id INTEGER SERIAL PRIMARY KEY NOT NULL ,
     paymentday INTEGER,
     status VARCHAR(50)
 );

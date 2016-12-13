@@ -11,7 +11,6 @@ import scala.concurrent.Future
 
 class Application @Inject() (val arrangementDto: ArrangementDto)  extends Controller {
 
-  import model.Arrangements._
   import scala.concurrent.ExecutionContext.Implicits.global
 
   def ping = Action {
@@ -28,8 +27,8 @@ class Application @Inject() (val arrangementDto: ArrangementDto)  extends Contro
 
   def saveArrangement = Action async { implicit request =>
     request.body.asJson.map(_.validate[ArrangementRequest] match {
-      case JsSuccess(request: ArrangementRequest, _) => {val x: Future[Result] = arrangementDto.save(request).map{ id => Ok(new CreateResponse(id.toString))}; x}
-      case err @ JsError(_) => {val x: Future[Result] = Future(BadRequest(Json.stringify(JsError.toFlatJson(err)))) ; x}
+      case JsSuccess(request: ArrangementRequest, _) => arrangementDto.save(request).map{ id => Ok(CreateResponse(id.toString))}
+      case err @ JsError(_) => Future(BadRequest(Json.stringify(JsError.toJson(err))))
     }).get
   }
 }

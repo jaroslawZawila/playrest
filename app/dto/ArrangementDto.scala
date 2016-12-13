@@ -28,7 +28,7 @@ class ArrangementDto @Inject() (protected val dbConfigProvider: DatabaseConfigPr
     def paymentDay = column[Int]("paymentday")
     def status = column[String]("status")
 
-    override def * = (id, paymentDay, status) <> (Arrangement.tupled, Arrangement.unapply )
+    override def * = (id, paymentDay, status) <> ((Arrangement.apply _).tupled, Arrangement.unapply )
   }
 }
 
