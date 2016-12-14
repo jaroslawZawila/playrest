@@ -1,7 +1,6 @@
 # Arrangements
 
 # --- !Ups
-
 CREATE TABLE arrangements
 (
     id INTEGER SERIAL PRIMARY KEY NOT NULL ,

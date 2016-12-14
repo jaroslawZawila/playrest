@@ -14,6 +14,7 @@ import play.api.libs.json._
 
 import scala.concurrent.Future
 import org.scalatest.junit.JUnitRunner
+import play.test.WithApplication
 
 @RunWith(classOf[JUnitRunner])
 class ApplicationTest extends PlaySpec with OneAppPerSuite with BeforeAndAfterAll {
@@ -70,7 +71,6 @@ class ApplicationTest extends PlaySpec with OneAppPerSuite with BeforeAndAfterAl
     "save arrangement returns id" in {
 
       val body = ArrangementRequest(12, "ACTIVE")
-      println(Json.stringify(Json.toJson(body)))
       val request = FakeRequest(POST, "/arrangement/").withJsonBody(Json.toJson(body))
 
       val result: Future[Result] = route(app, request).get
@@ -79,18 +79,26 @@ class ApplicationTest extends PlaySpec with OneAppPerSuite with BeforeAndAfterAl
       (contentAsJson(result) \ "id" ).get.as[String] must be("2")
     }
 
-    //TODO: add error handling test
-//    "save arrangement returns error" in {
-//
-//      val body = ArrangementRequest(12, "ACTIVE")
-//      println(Json.stringify(Json.toJson(body)))
-//      val request = FakeRequest(POST, "/arrangement/").withBody("{""}")
-//
-//      val result: Future[Result] = route(app, request).get
-//
-//      status(result) mustEqual OK
-//      (contentAsJson(result) \ "id" ).get.as[String] must be("2")
-//    }
+    "save invalid arrangement returns error" in {
+
+      val request = FakeRequest(POST, "/arrangement/").withBody("""{}""")
+
+      val result: Future[Result] = route(app, request).get
+
+      status(result) mustEqual BAD_REQUEST
+    }
+
+    "save arrangement returns error for sure" in {
+
+      val body = ArrangementRequest(12, "ACTIVEACTIVEACTIVEACTIVEACTIVEACTIVEACTIVEACTIVEACTIVEACTIVEACTIVEACTIVEACTIVEACTIVE")
+      val request = FakeRequest(POST, "/arrangement/").withJsonBody(Json.toJson(body))
+
+      val result: Future[Result] = route(app, request).get
+
+      status(result) mustEqual BAD_REQUEST
+      (contentAsJson(result) \ "id" ).get.as[String] must be("2")
+    }
+
   }
 
   override def beforeAll(): Unit = {

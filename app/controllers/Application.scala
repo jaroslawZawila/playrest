@@ -29,6 +29,6 @@ class Application @Inject() (val arrangementDto: ArrangementDto)  extends Contro
     request.body.asJson.map(_.validate[ArrangementRequest] match {
       case JsSuccess(request: ArrangementRequest, _) => arrangementDto.save(request).map{ id => Ok(CreateResponse(id.toString))}
       case err @ JsError(_) => Future(BadRequest(Json.stringify(JsError.toJson(err))))
-    }).get
+    }).getOrElse(Future(BadRequest("")))
   }
 }
