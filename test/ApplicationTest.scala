@@ -96,7 +96,6 @@ class ApplicationTest extends PlaySpec with OneAppPerSuite with BeforeAndAfterAl
       val result: Future[Result] = route(app, request).get
 
       status(result) mustEqual BAD_REQUEST
-      (contentAsJson(result) \ "id" ).get.as[String] must be("2")
     }
 
   }

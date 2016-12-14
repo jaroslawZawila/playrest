@@ -7,6 +7,7 @@ import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
 import slick.driver.JdbcProfile
 
 import scala.concurrent.{ExecutionContext, Future}
+import scala.util.Try
 
 @Singleton
 class ArrangementDto @Inject() (protected val dbConfigProvider: DatabaseConfigProvider) extends HasDatabaseConfigProvider[JdbcProfile] {
@@ -20,7 +21,11 @@ class ArrangementDto @Inject() (protected val dbConfigProvider: DatabaseConfigPr
   def getById(id: Int)(implicit executionContext: ExecutionContext): Future[Option[Arrangement]] =
     db.run(arrangements.filter( _.id === id ).result).map(_.headOption)
 
-  def save(arrangement: ArrangementRequest) = db.run((arrangements returning arrangements.map(_.id)) += Arrangement(0, arrangement.paymentDay, arrangement.status))
+  def save(arrangement: ArrangementRequest) = {
+    val y = (arrangements returning arrangements.map(_.id)) += Arrangement(0, arrangement.paymentDay, arrangement.status)
+    val x: Future[Try[Int]] = db.run(y.asTry)
+    x
+  }
 
   private class ArrangementTable(tag: Tag) extends Table[Arrangement](tag, "arrangements") {
 
