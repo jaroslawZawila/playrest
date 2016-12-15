@@ -22,9 +22,8 @@ class ArrangementDto @Inject() (protected val dbConfigProvider: DatabaseConfigPr
     db.run(arrangements.filter( _.id === id ).result).map(_.headOption)
 
   def save(arrangement: ArrangementRequest) = {
-    val y = (arrangements returning arrangements.map(_.id)) += Arrangement(0, arrangement.paymentDay, arrangement.status)
-    val x: Future[Try[Int]] = db.run(y.asTry)
-    x
+    val insertAction = (arrangements returning arrangements.map(_.id)) += Arrangement(0, arrangement.paymentDay, arrangement.status)
+    db.run(insertAction.asTry)
   }
 
   private class ArrangementTable(tag: Tag) extends Table[Arrangement](tag, "arrangements") {
