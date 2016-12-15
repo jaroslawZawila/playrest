@@ -2,7 +2,8 @@ package dto
 
 import javax.inject.{Inject, Singleton}
 
-import model.{Arrangement, ArrangementRequest}
+import model.request.{Arrangement => ArrangementRequest}
+import model.response.Arrangement
 import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
 import slick.driver.JdbcProfile
 

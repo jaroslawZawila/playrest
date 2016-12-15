@@ -1,20 +1,22 @@
+package controller
+
 import akka.stream.Materializer
-import model.{Arrangement, ArrangementRequest}
+import model.request.{Arrangement => ArrangementRequest}
+import model.response.Arrangement
 import org.junit.runner._
 import org.scalatest.BeforeAndAfterAll
+import org.scalatest.junit.JUnitRunner
 import org.scalatestplus.play._
 import play.api.db.DBApi
 import play.api.db.evolutions.{Evolution, Evolutions, SimpleEvolutionsReader}
 import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.libs.json._
 import play.api.mvc.Result
 import play.api.test.Helpers.{GET, _}
 import play.api.test._
 import play.api.{Application, Configuration, Mode}
-import play.api.libs.json._
 
 import scala.concurrent.Future
-import org.scalatest.junit.JUnitRunner
-import play.test.WithApplication
 
 @RunWith(classOf[JUnitRunner])
 class ApplicationTest extends PlaySpec with OneAppPerSuite with BeforeAndAfterAll {
