@@ -2,6 +2,7 @@ package controllers
 
 import javax.inject.Inject
 
+import action.AuditAction
 import dto.ArrangementDto
 import model.Arrangement
 import play.api.mvc._
@@ -17,7 +18,7 @@ class Application @Inject() (val arrangementDto: ArrangementDto)  extends Contro
     Ok("pong")
   }
 
-  def getArrangement(id: String) = Action async { implicit request =>
+  def getArrangement(id: String) = AuditAction async { implicit request =>
     val arrangement: Future[Option[Arrangement]] = arrangementDto.getById(id.toInt)
     arrangement.map {
       case Some(x) => Ok(x)
