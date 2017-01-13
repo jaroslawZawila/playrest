@@ -4,14 +4,17 @@ import javax.inject.Inject
 
 import action.AuditAction
 import dto.ArrangementDto
-import model.Arrangement
+import play.api.libs.json._
 import play.api.mvc._
 
 import scala.concurrent.Future
+import scala.util.Success
+
+import model.response.{Arrangement, Create}
+import model.request.{Arrangement => ArrangementRequest}
 
 class Application @Inject() (val arrangementDto: ArrangementDto)  extends Controller {
 
-  import model.Arrangements._
   import scala.concurrent.ExecutionContext.Implicits.global
 
   def ping = Action {
@@ -24,5 +27,14 @@ class Application @Inject() (val arrangementDto: ArrangementDto)  extends Contro
       case Some(x) => Ok(x)
       case None => NotFound("")
     }
+  }
+
+  def saveArrangement = Action async { implicit request =>
+    request.body.asJson.map(_.validate[ArrangementRequest] match {
+      case JsSuccess(request: ArrangementRequest, _) => arrangementDto.save(request).map{
+        case Success(id) => Ok(Create(id.toString))
+        case _ => BadRequest("{\"id\":\"ERROR\"}")}
+      case err @ JsError(_) => Future(BadRequest(Json.stringify(JsError.toJson(err))))
+    }).getOrElse(Future(BadRequest("")))
   }
 }
