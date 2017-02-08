@@ -16,6 +16,7 @@ libraryDependencies ++= Seq( cache , ws   , specs2 % Test, evolutions,
   "io.kamon" %% "kamon-core" % "0.6.0",
   "io.kamon" %% "kamon-play-25" % "0.6.2",
   "io.kamon" %% "kamon-log-reporter" % "0.6.0",
+  "io.kamon" %% "kamon-system-metrics" % "0.6.2",
   "com.monsanto.arch" %% "kamon-prometheus" % "0.2.0",
   "io.prometheus" % "simpleclient_common" % "0.0.20"
 )
