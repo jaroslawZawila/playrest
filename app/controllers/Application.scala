@@ -4,16 +4,18 @@ import javax.inject.Inject
 
 import action.AuditAction
 import dto.ArrangementDto
+import kamon.Kamon
 import play.api.libs.json._
 import play.api.mvc._
 
 import scala.concurrent.Future
 import scala.util.Success
-
 import model.response.{Arrangement, Create}
 import model.request.{Arrangement => ArrangementRequest}
 
 class Application @Inject() (val arrangementDto: ArrangementDto)  extends Controller {
+
+  Kamon.start()
 
   import scala.concurrent.ExecutionContext.Implicits.global
 

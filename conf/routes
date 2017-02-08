@@ -4,6 +4,7 @@
 
 # Home page
 GET     /ping                       controllers.Application.ping
+GET     /metrics                    controllers.MetricsController.index
 
 GET     /arrangement/:id            controllers.Application.getArrangement(id: String)
 POST    /arrangement/               controllers.Application.saveArrangement()
